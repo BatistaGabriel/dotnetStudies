@@ -27,10 +27,16 @@ namespace Play.Catalog.Service.Controllers
 
         // GET /items/{id}
         [HttpGet("{id}")]
-        public ItemDto GetById(Guid id)
+        public ActionResult<ItemDto> GetById(Guid id)
         {
             //Returns a specific item from the itemDTO list or a null if not found
-            return items.Where(x => x.Id == id).SingleOrDefault();
+            var item = items.Where(x => x.Id == id).SingleOrDefault();
+            if(item == null)
+            {
+                return NotFound();
+            }
+
+            return item;
         }
 
         // POST /items/{id}
@@ -58,6 +64,9 @@ namespace Play.Catalog.Service.Controllers
         public IActionResult Put(Guid id, UpdateItemDto updateItemDto)
         {
             var existingItem = items.Where(x => x.Id == id).SingleOrDefault();
+            if(existingItem == null){
+                return NotFound();
+            }
 
             //Creates a clone of the existing item
             var updatedItem = existingItem with{
@@ -79,6 +88,10 @@ namespace Play.Catalog.Service.Controllers
         {
             //Locates the item and remove it from the list
             var itemIndex = items.FindIndex(item => item.Id == id);
+            if (itemIndex < 0){
+                return NotFound();               
+            }
+
             items.RemoveAt(itemIndex);
 
             return NoContent();
