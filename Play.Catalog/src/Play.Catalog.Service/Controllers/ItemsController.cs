@@ -1,6 +1,6 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Play.Catalog.Service.Dtos;
 
@@ -29,9 +29,12 @@ namespace Play.Catalog.Service.Controllers
         [HttpGet("{id}")]
         public ActionResult<ItemDto> GetById(Guid id)
         {
-            //Returns a specific item from the itemDTO list or a null if not found
+            /*
+            *Returns a specific item from the itemDTO list 
+            *or a not found response
+            */
             var item = items.Where(x => x.Id == id).SingleOrDefault();
-            if(item == null)
+            if (item == null)
             {
                 return NotFound();
             }
@@ -45,9 +48,9 @@ namespace Play.Catalog.Service.Controllers
         {
             //Creates a new item following the existing itemDTO contract
             var item = new ItemDto(
-                Guid.NewGuid(), 
-                createItemDto.Name, 
-                createItemDto.Description, 
+                Guid.NewGuid(),
+                createItemDto.Name,
+                createItemDto.Description,
                 createItemDto.Price,
                 DateTimeOffset.UtcNow
             );
@@ -56,20 +59,26 @@ namespace Play.Catalog.Service.Controllers
             items.Add(item);
 
             //Returns the respose to the client
-            return CreatedAtAction(nameof(GetById), new{id = item.Id}, item);
+            return CreatedAtAction(nameof(GetById), new { id = item.Id }, item);
         }
 
         // PUT /items/{id}
         [HttpPut("{id}")]
         public IActionResult Put(Guid id, UpdateItemDto updateItemDto)
         {
+            /*
+            *Returns a not found response if a specific item 
+            *from the item list was not found
+            */
             var existingItem = items.Where(x => x.Id == id).SingleOrDefault();
-            if(existingItem == null){
+            if (existingItem == null)
+            {
                 return NotFound();
             }
 
             //Creates a clone of the existing item
-            var updatedItem = existingItem with{
+            var updatedItem = existingItem with
+            {
                 Name = updateItemDto.Name,
                 Description = updateItemDto.Description,
                 Price = updateItemDto.Price
@@ -88,8 +97,9 @@ namespace Play.Catalog.Service.Controllers
         {
             //Locates the item and remove it from the list
             var itemIndex = items.FindIndex(item => item.Id == id);
-            if (itemIndex < 0){
-                return NotFound();               
+            if (itemIndex < 0)
+            {
+                return NotFound();
             }
 
             items.RemoveAt(itemIndex);
