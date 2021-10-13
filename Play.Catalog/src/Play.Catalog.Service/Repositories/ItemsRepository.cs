@@ -6,18 +6,14 @@ using Play.Catalog.Entities;
 
 namespace Play.Catalog.Repositories
 {
-    public class ItemsRepository
+    public class ItemsRepository : IItemsRepository
     {
         private const string collectionName = "items"; // Represent a group of objects in mongoDB
         private readonly IMongoCollection<Item> dbCollection;
         private readonly FilterDefinitionBuilder<Item> filterDefinitionBuilder = Builders<Item>.Filter;
 
-        public ItemsRepository()
+        public ItemsRepository(IMongoDatabase database)
         {
-            //Declaring how to connect to MongoDB
-            var mongoClient = new MongoClient("mongodb://localhost:27017");
-            var database = mongoClient.GetDatabase("Catalog");
-
             dbCollection = database.GetCollection<Item>(collectionName);
         }
 
