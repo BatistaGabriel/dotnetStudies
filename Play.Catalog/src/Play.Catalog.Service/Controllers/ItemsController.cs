@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Play.Catalog.Service.Dtos;
 using Play.Catalog.Service.Entities;
 using Play.Catalog.Service.Repositories;
-using Play.Catalog.Service.Dtos;
 
 namespace Play.Catalog.Service.Controllers
 {
@@ -13,10 +13,10 @@ namespace Play.Catalog.Service.Controllers
     [Route("items")]
     public class ItemsController : ControllerBase
     {
-        private readonly IItemsRepository _itemsRepository;
+        private readonly IRepository<Item> _itemsRepository;
 
         // Dependency Injection
-        public ItemsController(IItemsRepository itemsRepository)
+        public ItemsController(IRepository<Item> itemsRepository)
         {
             _itemsRepository = itemsRepository;
         }
