@@ -1,6 +1,6 @@
 using System;
 
-namespace Play.Catalog.Entities
+namespace Play.Catalog.Service.Entities
 {
     public class Item
     {

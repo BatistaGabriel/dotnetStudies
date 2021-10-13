@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MongoDB.Driver;
-using Play.Catalog.Entities;
+using Play.Catalog.Service.Entities;
 
-namespace Play.Catalog.Repositories
+namespace Play.Catalog.Service.Repositories
 {
     public class ItemsRepository : IItemsRepository
     {

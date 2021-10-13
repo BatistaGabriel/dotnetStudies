@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Play.Catalog.Entities;
-using Play.Catalog.Repositories;
+using Play.Catalog.Service.Entities;
+using Play.Catalog.Service.Repositories;
 using Play.Catalog.Service.Dtos;
 
 namespace Play.Catalog.Service.Controllers

@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Play.Catalog.Entities;
+using Play.Catalog.Service.Entities;
 
-namespace Play.Catalog.Repositories
+namespace Play.Catalog.Service.Repositories
 {
     public interface IItemsRepository
     {
