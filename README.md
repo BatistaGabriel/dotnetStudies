@@ -21,6 +21,14 @@ docker ps
 ps          -> used to display on terminal all the running containers
 ```
 
+To run a docker-compose file you first need to navigate to the folder where that file is located, and then run the following command:
+
+```
+docker-compose up -d
+
+-d 		-> run in detached mode, which means the output should not be fully displayed.
+```
+
 ## VS Code
 By default VS Code will open a browser to you once you hit F5 to run the project. In order to don't do that you will need to go to:
 
