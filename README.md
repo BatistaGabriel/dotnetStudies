@@ -45,3 +45,21 @@ In order to test the routes without using only the swagger page you can use post
 ```
 
 To beautify the minified JSON above just copy it and search for a JSON beautifier like https://codebeautify.org/jsonviewer and do the beautify process.
+
+## Nuget
+In order to generate the nuget package you can do it using the .Net cli by the following coomand:
+
+```
+dotnet pack -o ..\..\..\packages\
+
+-o 	-> specify the destination of the generated nuget package
+
+```
+
+To "tell" nuget where to find packages we can use the following command line:
+
+```
+dotnet nuget add source <PACKAGES LOCATION> -n PlayEconomy
+
+-n 	-> specify a name for the source reference
+```
