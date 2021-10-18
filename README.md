@@ -1,5 +1,18 @@
 # dotnetStudies
 
+## DotNet CLI
+To add a new webapi project via dotnet cli you can use the following command:
+```
+dotnet new webapi -n <Project Name>
+```
+
+The same applies to other types of projects, in case you want to see the possible configurations just type the parameter **-l**
+
+To add a project into a solution via dotnet cli you can use the following command:
+```
+dotnet sln add <path-to-project.csproj>
+```
+
 ## Docker
 This command will create the mongo container that we are going to use into the project
 
