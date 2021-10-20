@@ -19,13 +19,6 @@ jobs:
         dotnet-version: 5.0.x
     - name: Restore dependencies
       run: dotnet restore
-    - name: Format using dotnet-format
-      # You may pin to the exact commit or the version.
-      # uses: jfversluis/dotnet-format@be430810dd6cde96a6c8ae7319d34b0fb14e302b
-      uses: jfversluis/dotnet-format@v1.0.8
-      with:
-        repo-token: ${{ github.token }}
-        action: fix
     - name: Build
       run: dotnet build --no-restore
     - name: Test
