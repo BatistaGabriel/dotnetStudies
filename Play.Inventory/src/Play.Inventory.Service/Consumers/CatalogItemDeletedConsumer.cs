@@ -21,7 +21,9 @@ namespace Play.Inventory.Service.Consumers
             var item = await _repository.GetAsync(message.ItemId);
 
             if (item == null)
+            {
                 return;
+            }
 
             await _repository.RemoveAsync(message.ItemId);
         }
