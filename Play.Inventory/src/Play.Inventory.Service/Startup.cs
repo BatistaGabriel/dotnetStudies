@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Play.Common.MassTransit;
 using Play.Common.MongoDB;
 using Play.Inventory.Service.Clients;
 using Play.Inventory.Service.Entities;
@@ -27,24 +28,11 @@ namespace Play.Inventory.Service
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMongo()
-                    .AddMongoRepository<InventoryItem>("inventoryitems");
+                    .AddMongoRepository<InventoryItem>("inventoryitems")
+                    .AddMongoRepository<CatalogItem>("catalogitems")
+                    .AddMassTransitWithRabbitMQ();
 
-            Random jitter = new();
-
-            services.AddHttpClient<CatalogClient>(client =>
-            {
-                client.BaseAddress = new Uri("https://localhost:5001");
-            })
-            .AddTransientHttpErrorPolicy(builder => builder.Or<TimeoutRejectedException>().WaitAndRetryAsync(
-                retryCount: 5,
-                sleepDurationProvider: retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt))
-                                                        + TimeSpan.FromSeconds(jitter.Next(0, 1000))
-            ))
-            .AddTransientHttpErrorPolicy(builder => builder.Or<TimeoutRejectedException>().CircuitBreakerAsync(
-                handledEventsAllowedBeforeBreaking: 3,
-                durationOfBreak: TimeSpan.FromSeconds(15)
-            ))
-            .AddPolicyHandler(Policy.TimeoutAsync<HttpResponseMessage>(1));
+            AddCatalogClient(services);
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -73,6 +61,26 @@ namespace Play.Inventory.Service
             {
                 endpoints.MapControllers();
             });
+        }
+
+        private static void AddCatalogClient(IServiceCollection services)
+        {
+            Random jitter = new();
+
+            services.AddHttpClient<CatalogClient>(client =>
+            {
+                client.BaseAddress = new Uri("https://localhost:5001");
+            })
+            .AddTransientHttpErrorPolicy(builder => builder.Or<TimeoutRejectedException>().WaitAndRetryAsync(
+                retryCount: 5,
+                sleepDurationProvider: retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt))
+                                                        + TimeSpan.FromSeconds(jitter.Next(0, 1000))
+            ))
+            .AddTransientHttpErrorPolicy(builder => builder.Or<TimeoutRejectedException>().CircuitBreakerAsync(
+                handledEventsAllowedBeforeBreaking: 3,
+                durationOfBreak: TimeSpan.FromSeconds(15)
+            ))
+            .AddPolicyHandler(Policy.TimeoutAsync<HttpResponseMessage>(1));
         }
     }
 }
