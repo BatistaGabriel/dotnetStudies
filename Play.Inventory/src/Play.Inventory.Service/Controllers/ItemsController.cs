@@ -14,13 +14,13 @@ namespace Play.Inventory.Service.Controllers
     [Route("items")]
     public class ItemsController : ControllerBase
     {
-        private readonly IRepository<InventoryItem> _itemsRepository;
-        private readonly CatalogClient _catalogClient;
+        private readonly IRepository<InventoryItem> _inventoryItemsRepository;
+        private readonly IRepository<CatalogItem> _catalogItemsRepository;
 
-        public ItemsController(IRepository<InventoryItem> itemsRepository, CatalogClient catalogClient)
+        public ItemsController(IRepository<InventoryItem> inventoryItemsRepository, IRepository<CatalogItem> catalogItemsRepository)
         {
-            _itemsRepository = itemsRepository;
-            _catalogClient = catalogClient;
+            _inventoryItemsRepository = inventoryItemsRepository;
+            _catalogItemsRepository = catalogItemsRepository;
         }
 
         [HttpGet]
@@ -31,12 +31,13 @@ namespace Play.Inventory.Service.Controllers
                 return BadRequest();
             }
 
-            var catalogItems = await _catalogClient.GetCatalogItemsAsync();
-            var inteventoryItemsEntity = await _itemsRepository.GetAllAsync(item => item.UserId == userId);
+            var inteventoryItemsEntities = await _inventoryItemsRepository.GetAllAsync(item => item.UserId == userId);
+            var itemsIds = inteventoryItemsEntities.Select(item => item.CatalogItemId);
+            var catalogItemsEntites = await _catalogItemsRepository.GetAllAsync(item => itemsIds.Contains(item.Id));
 
-            var inventoryItemDtos = inteventoryItemsEntity.Select(inventoryItem =>
+            var inventoryItemDtos = inteventoryItemsEntities.Select(inventoryItem =>
             {
-                var catalogItem = catalogItems.Single(catalogItem => catalogItem.Id == inventoryItem.CatalogItemId);
+                var catalogItem = catalogItemsEntites.Single(catalogItem => catalogItem.Id == inventoryItem.CatalogItemId);
 
                 return inventoryItem.AsDto(catalogItem.Name, catalogItem.Description);
             });
@@ -52,7 +53,7 @@ namespace Play.Inventory.Service.Controllers
                 return BadRequest();
             }
 
-            var inventoryItem = await _itemsRepository.GetAsync(
+            var inventoryItem = await _inventoryItemsRepository.GetAsync(
                 item => item.UserId == grantItemsDto.UserId &&
                 item.CatalogItemId == grantItemsDto.CatalogItemId
             );
@@ -67,13 +68,13 @@ namespace Play.Inventory.Service.Controllers
                     AcquiredDate = DateTimeOffset.UtcNow
                 };
 
-                await _itemsRepository.CreateAsync(inventoryItem);
+                await _inventoryItemsRepository.CreateAsync(inventoryItem);
             }
             else
             {
                 inventoryItem.Quantity += grantItemsDto.Quantity;
 
-                await _itemsRepository.UpdateAsync(inventoryItem);
+                await _inventoryItemsRepository.UpdateAsync(inventoryItem);
             }
 
             return Ok();
