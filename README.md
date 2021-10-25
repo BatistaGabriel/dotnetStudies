@@ -1,6 +1,23 @@
 # dotnetStudies
 
-## DotNet CLI
+## How to run
+
+After you had checked out the repository, open a new terminal instance and run the command:
+
+```
+dotnet nuget add source <PACKAGES LOCATION> -n PlayEconomy
+```
+
+pointing to the folder **packages**, this will add into you nuget references the proper reference to use in the shared packages.
+
+With that done you can run each project individually by navigating to the folder via terminal and running the command:
+
+```
+dotnet run
+```
+
+## Notes
+> ### DotNet CLI
 To add a new webapi project via dotnet cli you can use the following command:
 ```
 dotnet new webapi -n <Project Name>
@@ -13,7 +30,7 @@ To add a project into a solution via dotnet cli you can use the following comman
 dotnet sln add <path-to-project.csproj>
 ```
 
-## Docker
+> ### Docker
 This command will create the mongo container that we are going to use into the project
 
 ```
@@ -42,7 +59,7 @@ docker-compose up -d
 -d 		-> run in detached mode, which means the output should not be fully displayed.
 ```
 
-## VS Code
+> ### VS Code
 By default VS Code will open a browser to you once you hit F5 to run the project. In order to don't do that you will need to go to:
 
 **.vscode/launch.json**
@@ -58,7 +75,7 @@ and inside that file you will search for the section '*serverReadyAction*'  that
 
 Go ahead and remove it! Now your project will run but without opening the browser.
 
-## Postman
+> ### Postman
 In order to test the routes without using only the swagger page you can use postman, here is the generated collection that you can use:
 
 ```
@@ -67,7 +84,7 @@ In order to test the routes without using only the swagger page you can use post
 
 To beautify the minified JSON above just copy it and search for a JSON beautifier like https://codebeautify.org/jsonviewer and do the beautify process.
 
-## Nuget
+> ### Nuget
 In order to generate the nuget package you can do it using the .Net cli by the following coomand:
 
 ```
