@@ -390,3 +390,6 @@ msbuild.wrn
 
 node_modules
 .eslintcache
+
+# Necessary to ignore
+.vscode/
